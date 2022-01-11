@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -27,18 +27,20 @@ class Account(BaseModel):
         return f"{self.name} ({id}"
 
 
-def get_id():
-    latest = 0
-    while True:
-        yield latest
-        latest += 1
-
-
-get_id = get_id()
+account_store = []
 
 
 @app.post("/registration")
 async def register(account: Account):
-    account.id = next(get_id)
+    account.id = len(account_store)
+    account_store.append(account)
     print("/registration registered a new account {account}")
     return {"message": "Registration successful", "id": account.id}
+
+
+@app.get("/user/{user_id}")
+async def user(user_id: int):
+    if user_id < len(account_store):
+        return account_store[user_id]
+    else:
+        raise HTTPException(status_code=404, detail=f"User having ID = {user_id} cannot be found")
