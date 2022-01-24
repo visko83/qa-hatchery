@@ -28,12 +28,6 @@ def check_credentials(credentials: HTTPBasicCredentials):
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Bad password")
 
 
-@app.get("/registration")
-async def register():
-    print("/registration endpoint was called")
-    return {"message": "Registration successful"}
-
-
 class Name(BaseModel):
     given: str
     family: str
@@ -53,7 +47,7 @@ class Account(BaseModel):
         return f"{self.name} ({id}"
 
 
-@app.post("/destinations")
+@app.get("/destinations")
 async def destinations(credentials: HTTPBasicCredentials = Depends(security)):
     check_credentials(credentials)
     return DESTINATIONS
