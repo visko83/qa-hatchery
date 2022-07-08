@@ -6,6 +6,7 @@ verify_ssl = true
 [packages]
 fastapi = "*"
 uvicorn = "*"
+itsdangerous = "*"
 
 [requires]
 python_version = "3"
