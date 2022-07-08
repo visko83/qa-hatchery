@@ -8,6 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
+from starlette.responses import HTMLResponse
 
 DESTINATIONS = {"Hungary": {"Budapest": ["Four Seasons", "Hilton", "Kempinski", "Corinthia"]},
                 "Spain": {"Barcelona": ["Hilton", "InterContinental", "Hyatt Regency", "Hotel Vincci Gala"]},
@@ -46,7 +47,10 @@ class Account(BaseModel):
     def __str__(self):
         return f"{self.name} ({id}"
 
-
+@app.get("/")
+async def home():
+  return HTMLResponse("<h1>Hello!</h1>")
+      
 @app.get("/destinations")
 async def destinations(credentials: HTTPBasicCredentials = Depends(security)):
     check_credentials(credentials)
